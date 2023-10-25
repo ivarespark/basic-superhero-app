@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.superheroapp.databinding.ActivitySuperHeroListBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +18,8 @@ class SuperHeroListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySuperHeroListBinding
     private lateinit var retrofit: Retrofit
+    private lateinit var adapter: SuperheroAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySuperHeroListBinding.inflate(layoutInflater) // llenar el binding con el layout
@@ -35,6 +38,12 @@ class SuperHeroListActivity : AppCompatActivity() {
             override fun onQueryTextChange(newText: String?) = false
 
         })
+
+        adapter = SuperheroAdapter()
+        binding.rvSuperHero.setHasFixedSize(true)
+        binding.rvSuperHero.layoutManager = LinearLayoutManager(this)
+        binding.rvSuperHero.adapter = adapter
+
     }
 
     private fun searchByName(query: String) {
@@ -47,14 +56,15 @@ class SuperHeroListActivity : AppCompatActivity() {
                 val response: SuperHeroDataResponse ?= myResponse.body()
                 if(response != null){
                     Log.i("dev", response.toString())
+                    // Solo el hilo principal puede modificar la UI
+                    // con runOnUiThread se ejecuta en el hilo principal desde hilo secundario
+                    runOnUiThread {
+                        adapter.updateList(response.superHeroes)
+                        binding.progressBar.isVisible = false
+                    }
                 }
             }else{
                 Log.i("dev", "NO funciona :(")
-            }
-            // Solo el hilo principal puede modificar la UI
-            // con runOnUiThread se ejecuta en el hilo principal desde hilo secundario
-            runOnUiThread {
-                binding.progressBar.isVisible = false
             }
         }
     }
