@@ -8,6 +8,7 @@ data class SuperHeroDataResponse(
 )
 
 data class SuperheroItem(
+    @SerializedName("response") val response:String,
     @SerializedName("id") val superheroId:String,
     @SerializedName("name") val name:String,
     @SerializedName("powerstats") val powerstats: Powerstats,

@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class SuperheroAdapter(var superheroList: List<SuperheroItem> = emptyList()) :
+class SuperheroAdapter(var superheroList: List<SuperheroItem> = emptyList(),private val onItemSelected:(String) -> Unit) :
     RecyclerView.Adapter<SuperheroViewHolder>() {
 
     fun updateList(superheroList: List<SuperheroItem>){
@@ -19,7 +19,7 @@ class SuperheroAdapter(var superheroList: List<SuperheroItem> = emptyList()) :
     }
 
     override fun onBindViewHolder(viewholder: SuperheroViewHolder, position: Int) {
-        viewholder.bind(superheroList[position])
+        viewholder.bind(superheroList[position],onItemSelected)
 
     }
 

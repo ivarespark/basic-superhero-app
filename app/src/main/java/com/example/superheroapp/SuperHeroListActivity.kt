@@ -1,5 +1,6 @@
 package com.example.superheroapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SuperHeroListActivity : AppCompatActivity() {
+
+    companion object {
+        const val EXTRA_ID = "extra_id"
+    }
 
     private lateinit var binding: ActivitySuperHeroListBinding
     private lateinit var retrofit: Retrofit
@@ -39,7 +44,8 @@ class SuperHeroListActivity : AppCompatActivity() {
 
         })
 
-        adapter = SuperheroAdapter()
+        adapter = SuperheroAdapter{navigateToDetail(it)} // se coloca así porque se ha declarado como lambda
+        //adapter = SuperheroAdapter{superheroId -> navigateToDetail(superheroId)} // es lo mismo que lo de arriba
         binding.rvSuperHero.setHasFixedSize(true)
         binding.rvSuperHero.layoutManager = LinearLayoutManager(this)
         binding.rvSuperHero.adapter = adapter
@@ -75,5 +81,11 @@ class SuperHeroListActivity : AppCompatActivity() {
             .baseUrl("https://superheroapi.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+
+    private fun navigateToDetail(id:String){
+        val intent = Intent(this, DetailSuperheroActivity::class.java)
+        intent.putExtra(EXTRA_ID, id)
+        startActivity(intent)
     }
 }
