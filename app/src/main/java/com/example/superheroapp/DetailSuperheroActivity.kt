@@ -50,6 +50,8 @@ class DetailSuperheroActivity : AppCompatActivity() {
         Picasso.get().load(superheroItem.image.url).into(binding.ivSuperheroDetail) // carga imagen en imageview
         binding.tvDetailSuperheroName.text = superheroItem.name
         prepareStats(superheroItem.powerstats)
+        binding.tvDetailSuperheroRealName.text = superheroItem.biography.fullName
+        binding.tvDetailSuperheroPublisher.text = superheroItem.biography.publisher
 
     }
 
@@ -61,7 +63,6 @@ class DetailSuperheroActivity : AppCompatActivity() {
         updateHeight(binding.viewSpeed, powerstats.speed)
         updateHeight(binding.viewPower, powerstats.power)
         updateHeight(binding.viewStrength, powerstats.strength)
-
     }
 
     private fun updateHeight(view:View, stat:String){
